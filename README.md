@@ -1,5 +1,8 @@
 # Back-To-The-HighSchool
-객체지향프로그래밍 04분반 4조
+가장 소중한 순간은 언제나 지금이야!
+
+
+
 
 # 시작
 ![beginning_1](https://user-images.githubusercontent.com/90540925/144015702-93d5598c-42c2-4237-b39b-3cb3befc7649.png)
@@ -20,7 +23,7 @@
 
 # 우유 급식
 ![milk_1](https://user-images.githubusercontent.com/90540925/144015938-516d6fd9-3c54-4229-a0d2-4ef401942191.png)
-기억하니, 우유급식? 우유급식으로 늘 하던 게임이 있었던 것 같은데... 이거 정말 추억인걸? ㄹ
+기억하니, 우유급식? 우유급식으로 늘 하던 게임이 있었던 것 같은데... 이거 정말 추억인걸?
 
 
 # 점심 시간
