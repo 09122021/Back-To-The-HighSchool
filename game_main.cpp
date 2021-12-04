@@ -15,7 +15,9 @@
 using namespace bangtal;
 
 extern void beg_main();
-extern void prac_main();
+extern int life;
+
+SoundPtr text_box_next;
 
 int main()
 {
@@ -23,8 +25,10 @@ int main()
 	setGameOption(GameOption::GAME_OPTION_MESSAGE_BOX_BUTTON, false);
 	setGameOption(GameOption::GAME_OPTION_ROOM_TITLE, false);
 
-	ScenePtr firstScene = Scene::create("", "Images/ÇÐ±³¾Õ.png");
-	ObjectPtr start_game = Object::create("Images/clock1.png", firstScene, 500, 360);
+	text_box_next = Sound::create("Sound/next_box_next.mp3");
+	ScenePtr firstScene = Scene::create("", "Images/start_scene.png");
+	ObjectPtr start_game = Object::create("Images/start_button.png", firstScene, 540, 30);
+	start_game->setScale(0.2f);
 	start_game->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool
 		{
 			beg_main();

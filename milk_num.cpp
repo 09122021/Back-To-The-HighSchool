@@ -13,6 +13,11 @@ char message[50];
 int my_num, your_num, text_i = 0;
 bool issmaller;
 
+extern void milk_2_lunch_main();
+extern void init_ending_scene();
+extern void life_scene_2(ScenePtr scene);
+extern void life_cut();
+
 //결과 보여주는 함수
 void milk_result() {
 	bigger->hide(); smaller->hide(); //버튼들 숨기기
@@ -48,6 +53,8 @@ void milk_result() {
 		text_i += 4;
 		milk_text[text_i]->show(); //text_i == 12
 		milk_fail->play();
+		life_scene_2(milk_result_scene);
+		life_cut();
 	}
 }
 
@@ -106,6 +113,7 @@ void init_milk_game() {
 
 		milk_text[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
 			milk_text[text_i]->hide();
+
 			milk_text[text_i + 1]->show();
 
 			switch (text_i) { //추가기능 필요한 텍스트들 특별처리
@@ -122,11 +130,14 @@ void init_milk_game() {
 				break;
 			case 9: //친구 : 아! 이걸 맞히네!
 				milk_text[text_i + 1]->hide(); //텍스트 숨기기
+				milk_2_lunch_main();
 				break;
 			case 11: //친구 : 헐 어떻게 똑같을 수 있지? 우유 바꿔서 다시 ㄱㄱ
 				milk_text[text_i + 1]->hide(); //텍스트 숨기기
 				text_i = 6; //어디 보자, 내 숫자는... 아하!
 				create_milk_num();
+			case 13: // 돈까스 잘먹을게~
+				milk_2_lunch_main();
 			}
 
 			text_i++;
@@ -155,9 +166,12 @@ void init_milk_game() {
 	milk_box = Object::create("milk_images/milk_box.png", classroom, 440, 250);
 	milk_text[0]->show();
 	milk_kids->play();
+	// startGame(classroom);
+	setGameOption(GameOption::GAME_OPTION_INVENTORY_BUTTON, false);
+	setGameOption(GameOption::GAME_OPTION_MESSAGE_BOX_BUTTON, false);
+	setGameOption(GameOption::GAME_OPTION_ROOM_TITLE, false);
 
 	classroom->enter();
-	// startGame(classroom);
 }
 
 void milk_num_main()

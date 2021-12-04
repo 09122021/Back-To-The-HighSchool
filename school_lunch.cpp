@@ -1,4 +1,3 @@
-/*
 #include <bangtal>
 #include <cstdlib>
 #include <random>
@@ -13,8 +12,6 @@ using namespace bangtal;
 #define CHAM_LENGTH 102
 #define CHAM_WIDTH 142
 
-
-
 ObjectPtr rush_start;
 ObjectPtr kodari_hate_message;
 ObjectPtr rush_great;
@@ -22,6 +19,13 @@ ObjectPtr game_clear;
 
 TimerPtr meal_rush_timer;
 TimerPtr menu_timer;
+
+extern ObjectPtr life_point_bar;
+extern ObjectPtr life_point[4];
+extern void life_scene_2(ScenePtr scene);
+extern void life_cut();
+extern void is_wrong_main();
+extern int life;
 
 //플레이 bgm*****************************************************************************************************************************************************
 auto meal_rush_bgm = Sound::create("mealsound/급식실사운드.mp3");
@@ -52,9 +56,6 @@ constexpr int MAX = 1180;	// 메뉴 X값 랜덤 설정 범위. 1~1180
 auto studentX = 530, studentY = 6;
 auto student = Object::create("mealimages/tray.png", meal_screen2, studentX, studentY);	// 플레이어(식판) 설정
 
-
-
-
 int su = 550;	// 메뉴 Y값 고정. X값만 랜덤 할당->실행할때마다 다른 값이 나오도록 했는데, 실제로 구현이 X (Graderush에서는 구현됐음)
 auto SpaX = rand()% MAX, CurX = rand() % MAX, DonX = rand() % MAX, JangX = rand() % MAX, ChamX = rand() % MAX, KodariX = rand() % MAX;
 auto SpaY = su, CurY = su, DonY = su, JangY = su, ChamY = su, KodariY = su;
@@ -79,8 +80,9 @@ void run_time_over()
 	meal_rush_timer->stop();
 	GAMEOVER->show();
 	meal_rush_bgm->stop();
-	meal_rush_fail_sound->play();
-	// life_cut();
+	hideTimer();
+	// meal_rush_fail_sound->play();
+	life_cut();
 }
 
 
@@ -97,7 +99,7 @@ void rush_game_clear()	//급식런 게임 클리어
 	meal_rush_bgm->stop();
 	meal_rush_clear_sound->play();
 	rush_great->show();
-	game_clear->show();
+	hideTimer();
 }
 
 void kodari_over()	//코다리찜에 닿은 경우
@@ -106,8 +108,9 @@ void kodari_over()	//코다리찜에 닿은 경우
 	meal_rush_timer->stop();
 	meal_rush_bgm->stop();
 	kodari_sound->play();
-	meal_rush_fail_sound->play();
-	GAMEOVER->show();
+	hideTimer();
+	// GAMEOVER->show();
+	life_cut();
 }
 
 // 시작 버튼 누르면 시작 버튼 사라지고 게임 실행화면으로 이동, 타이머 시작 
@@ -123,9 +126,6 @@ void start_game()
 	meal_rush_timer->setOnTimerCallback([&](TimerPtr)-> bool {
 		// 1분이 지나면 게임 오버되도록 설정.
 		run_time_over();
-		
-		//endGame();
-
 		return true;
 		});
 	showTimer(meal_rush_timer);
@@ -284,7 +284,7 @@ bool is_student_get_kodari()	//코다리짬->닿으면 실패
 	else return false;
 }
 
-int main()
+void school_lunch_main()
 {
 	std::srand(std::time(nullptr));	
 	srand((unsigned int)time(NULL));	//메뉴 x좌표 랜덤설정
@@ -320,16 +320,26 @@ int main()
 	//코다리 싫어 메시지
 	kodari_hate_message = Object::create("mealimages/kodarihate.png", meal_screen2, 0, 0);
 	kodari_hate_message->hide();
+	kodari_hate_message->setOnMouseCallback([&](ObjectPtr button, auto x, auto y, auto action)-> bool
+		{
+			meal_rush_fail_sound->stop();
+			is_wrong_main();
+			return 0;
+		});
 
 	//게임 성공 텍스트
 	rush_great = Object::create("mealimages/rush_great.png", meal_screen2, 0, 0);
 	rush_great->hide();
+	rush_great->setOnMouseCallback([&](ObjectPtr button, auto x, auto y, auto action)-> bool
+		{
+			meal_rush_clear_sound->stop();
+			is_wrong_main();
+			return 0;
+		});
 
 	//게임 성공 메시지(CLEAR)
-	game_clear = Object::create("mealimages/GAMECLEAR.png", meal_screen2, 0, 250);
-	game_clear->hide();
-	
-
+	// game_clear = Object::create("mealimages/GAMECLEAR.png", meal_screen2, 0, 250);
+	// game_clear->hide();
 	
 	//시작화면 함수로 이동
 	rush_start = Object::create("mealimages/meal_start.png", meal_screen1, 890, 100);
@@ -340,9 +350,10 @@ int main()
 			start_game();
 			return true;
 		});
-	startGame(meal_screen1);
+	
 
-	return 0;
+	life_scene_2(meal_screen2);
+	// startGame(meal_screen1);
+	meal_screen1->enter();
 }
-*/
 

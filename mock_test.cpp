@@ -1,4 +1,3 @@
-/*
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <bangtal>
@@ -8,25 +7,35 @@ using namespace bangtal;
 ScenePtr teacher_scene, mockQ1, mockQ2, mockQ3;
 ObjectPtr option[5], mock_text[MOCK_TEXT_MAX];
 SoundPtr mock_heart, mock_pokemon, mock_right, mock_wrong;
-int text_i = 0;
+int mock_test_i = 0;
+
+extern ObjectPtr life_point_bar;
+extern ObjectPtr life_point[4];
+extern void life_scene_2(ScenePtr scene);
+extern void life_cut();
+extern void game_clear_ending_main();
+extern SoundPtr text_box_next;
 
 //정답을 클릭했을 때 공통적으로 처리할 일들
 void mock_right_result() {
-    mock_text[text_i]->show();
+    mock_text[mock_test_i]->show();
     mock_pokemon->stop();
     mock_right->play();
 }
 
 //오답을 클릭했을 때 공통적으로 처리할 일들
 void mock_wrong_result() {
-    mock_text[++text_i]->show();
+    mock_text[++mock_test_i]->show();
     mock_pokemon->stop();
-    mock_wrong->play();
+    // mock_wrong->play();
+	life_cut();
 }
 
 //세번째 문제 함수
 void mock_thirdQ() {
     mockQ3->enter();
+	// 라이프 추가
+	life_scene_2(mockQ3);
     mock_right->stop();
     mock_wrong->stop();
     mock_pokemon->play();
@@ -39,13 +48,13 @@ void mock_thirdQ() {
 
         if (i == 3) { //정답(4번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_right_result(); //text_i == 15, 선생님 : 음.. 그래, 정답이다.
+                mock_right_result(); //mock_test_i == 15, 선생님 : 음.. 그래, 정답이다.
                 return true;
                 });
         }
         else { //오답(1,2,3,5번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_wrong_result(); //++text_i == 16, 선생님 : 땡! 유종의 미..
+                mock_wrong_result(); //++mock_test_i == 16, 선생님 : 땡! 유종의 미..
                 return true;
                 });
         }
@@ -55,6 +64,7 @@ void mock_thirdQ() {
 //두번째 문제 함수
 void mock_secondQ() {
     mockQ2->enter();
+	life_scene_2(mockQ2);
     mock_right->stop();
     mock_wrong->stop();
     mock_pokemon->play();
@@ -67,13 +77,13 @@ void mock_secondQ() {
 
         if (i == 3) { //정답(4번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_right_result(); //text_i == 11, 선생님 : 음.. 그래, 정답이다. 
+                mock_right_result(); //mock_test_i == 11, 선생님 : 음.. 그래, 정답이다. 
                return true;
                 });
         }
         else { //오답(1,2,3,5번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_wrong_result(); //++text_i == 12, 선생님 : 아이고 이건 쉬운 문젠데..
+                mock_wrong_result(); //++mock_test_i == 12, 선생님 : 아이고 이건 쉬운 문젠데..
                return true;
                 });
         }
@@ -83,6 +93,7 @@ void mock_secondQ() {
 //첫번째 문제 함수
 void mock_firstQ() {
     mockQ1->enter();
+	life_scene_2(mockQ1);
     mock_heart->stop();
     mock_pokemon->play();
 
@@ -94,13 +105,13 @@ void mock_firstQ() {
         
         if (i == 1) { //정답(2번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_right_result(); // text_i == 7, 선생님 : 음.. 그래, 정답이다.
+                mock_right_result(); // mock_test_i == 7, 선생님 : 음.. 그래, 정답이다.
                 return true;
                 });
         }
         else { //오답(1,3,4,5번)을 클릭하면
             option[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-                mock_wrong_result(); //++text_i == 8, 선생님 : 아이고 1번부터 틀리네.. 
+                mock_wrong_result(); //++mock_test_i == 8, 선생님 : 아이고 1번부터 틀리네.. 
                 return true;
                 });
         }
@@ -135,34 +146,40 @@ void init_mock_game() {
         else mock_text[i] = Object::create(path, mockQ3, 0, 0, false); //세번째 문제 화면 텍스트들
 
         mock_text[i]->setOnMouseCallback([&](auto p, auto x, auto y, auto action)->bool {
-            mock_text[text_i]->hide();
-            mock_text[text_i + 1]->show();
+            mock_text[mock_test_i]->hide();
+			text_box_next->play();
+			if (i != MOCK_TEXT_MAX - 1) mock_text[mock_test_i + 1]->show();
 
-            switch (text_i) { //추가기능 필요한 텍스트들 특별처리
+            switch (mock_test_i) { //추가기능 필요한 텍스트들 특별처리
             case 2 : //짝꿍 : 야! 너 불쌍하다!ㅋㅋㅋㅋ
                 mock_heart->play(); break;
             case 6 : //헉... 갑자기 현기증이 난다..!
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기
                 mock_firstQ(); break; //첫번째 문제 함수
             case 7 : //선생님 : 음.. 그래, 정답이다.
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
-                text_i += 2; //text_i == 9
-                mock_text[text_i + 1]->show(); break;
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기
+                mock_test_i += 2; //mock_test_i == 9
+                mock_text[mock_test_i + 1]->show(); break;
             case 10 : //선생님 : 그럼 2번도 풀어봐라.
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기
                 mock_secondQ(); break; //두번째 문제 함수
             case 11 : //선생님 : 음.. 그래, 정답이다.
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
-                text_i += 2; //text_i == 13
-                mock_text[text_i + 1]->show(); break;
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기
+                mock_test_i += 2; //mock_test_i == 13
+                mock_text[mock_test_i + 1]->show(); break;
             case 14 : //선생님 : 그럼 마지막으로 3번도 풀어봐라
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기
                 mock_thirdQ(); break;
             case 15 : //선생님 : 음.. 그래, 정답이다.
-                mock_text[text_i + 1]->hide(); //텍스트 숨기기
+                mock_text[mock_test_i + 1]->hide(); //텍스트 숨기기 
+				game_clear_ending_main();
+				break;
+			case 17 : 
+				game_clear_ending_main();
+				break;
             }
 
-            text_i++;
+            mock_test_i++;
 
             return true;
             });
@@ -171,12 +188,12 @@ void init_mock_game() {
     //첫화면 세팅
     mock_text[0]->show();
 
-    startGame(teacher_scene);
+	teacher_scene->enter();
+    // startGame(teacher_scene);
 }
 
 
-int main()
+void mock_test_main()
 {
     init_mock_game();
 }
-*/

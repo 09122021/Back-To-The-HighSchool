@@ -18,7 +18,7 @@ using namespace bangtal;
 
 // 기본 세트
 extern int story_idx;
-extern int clear[6];
+extern int clear[2];
 extern ObjectPtr story_text_box[37];
 extern int story_idx;
 extern TimerPtr TeacherTimer;
@@ -42,6 +42,7 @@ ObjectPtr player, trap, timer_box;
 
 // 등굣길 시작 플레이어 좌표와 장애물 좌표, 말풍선 좌표
 float playerX = 0, playerY = 0;
+// float playerX = 500, playerY = 400;
 float trapX = 1000;
 float trapY = 340;
 float enemy_box_X = 0, enemy_box_Y = 0;
@@ -69,7 +70,7 @@ ObjectPtr school_player_box[3];
 
 // 순서
 bool check_easter_dress();
-void life_cut();
+extern void life_cut();
 
 // 옷입히기와 등교결과에 따른 스토리인덱스값 반환
 void check_school_door()
@@ -83,10 +84,12 @@ void check_school_door()
 		// 옷도 안 입고 오고 지각도 하면
 		else if (clear[0] == 0 && clear[1] == 0) story_idx = 14;
 		// 옷은 제대로 입었는데 지각한 경우
-		else if (clear[0] == 1 && clear[1] == 1) story_idx = 14;
+		else if (clear[0] == 1 && clear[1] == 0) story_idx = 14;
 		// 둘 다 만족한 경우
 		else story_idx = 12;
 	}
+
+	printf("%d %d", clear[0], clear[1]);
 }
 
 

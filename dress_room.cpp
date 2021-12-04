@@ -12,13 +12,15 @@ using namespace bangtal;
 // 옷 종류
 #define DRESS_VAR_SIZE 4
 
-extern int story_idx;
-extern int clear[6];
+extern int story_idx;;
 extern void life_init();
 extern void life_scene(int idx);
 
 extern void go_to_school_main();
 extern void s2m_main();
+extern void mock_test_main();
+
+int clear[2] = {2, 2};
 
 // 여기서 인덱스랑 박스 모두 선언
 int story_idx = 1;
@@ -58,6 +60,8 @@ extern void check_school_door();
 extern void init_go_to_school();
 extern ObjectPtr is_wrong_finger;
 extern SoundPtr is_wrong_BGM;
+
+extern void game_over_ending_main();
 
 bool is_scene_ch_box(int idx)
 {
@@ -147,44 +151,54 @@ void init_obj()
 
 void life_scene(int idx)
 {
-	life_point_bar->locate(story_to_scene(idx), 50, 235);
+	life_point_bar->locate(story_to_scene(idx), 30, 620);
 
 	for (int i = 0; i < life; i++)
 	{
-		life_point[i]->locate(story_to_scene(idx), 60, 235 + (10 * (i + 1) + 50 * (i)));
+		life_point[i]->locate(story_to_scene(idx), 30 + (10 * (i + 1) + 50 * (i)), 630);
+	}
+}
+
+// story_to_scene을 사용할 수 없는 경우
+void life_scene_2(ScenePtr scene)
+{
+	life_point_bar->locate(scene, 30, 620);
+
+	for (int i = 0; i < life; i++)
+	{
+		life_point[i]->locate(scene, 30 + (10 * (i + 1) + 50 * (i)), 630);
 	}
 }
 
 void life_init()
 {
-	// 70x250px
-	life_point_bar = Object::create("Images/life_bar.png", go_to_school, 50, 235);
+	life_point_bar = Object::create("Images/life_bar.png", go_to_school, 30, 620);
 
 	for (int i = 0; i < life; i++)
 	{
-		life_point[i] = Object::create("Images/life_point_0.png", go_to_school, 60, 235 + (10 * (i + 1) + 50 * (i)));
+		life_point[i] = Object::create("Images/life_point_0.png", go_to_school, 30 + (10 * (i + 1) + 50 * (i)), 630);
 	}
 }
 
 // 라이프포인트 잘라내기
 void life_cut()
 {
-	if (life > 1)
+	if (life >= 1)
 	{
 		life_sound->play();
 		life_point[life - 1]->setImage("Images/life_point_1.png");
 		life -= 1;
 	}
-	// life_point가 1보다 작으면 완전히 게임 오버.
+	else
+	{
+		game_over_ending_main();
+	}
 }
 
-
-// 나중에 이거 extern으로 받기
 void init_scene()
 {
 	post_go_to_school = Scene::create("", "Images/post_go_to_school.png");
 	is_wrong = Scene::create("", "Images/is_wrong.png");
-	// is_wrong_finger = Object::create("/Images/is_wrong_finger.png", is_wrong, 0, 0, false);
 	pre_is_wrong = Scene::create("", "Images/pre_is_wrong.png");
 	go_to_school = Scene::create("", "Images/go_to_school.png");
 	dress_room = Scene::create("", "Images/dress_room_scene.png");
@@ -350,7 +364,7 @@ void story_init()
 	story_text_box[35]->setOnMouseCallback([&](ObjectPtr button, auto x, auto y, auto action)-> bool
 		{
 			story_text_box[story_idx]->hide();
-			// 들어가기
+			mock_test_main();
 			return 0;
 		});
 
@@ -420,6 +434,7 @@ bool check_dress()
 	{
 		if (dress_select_index[i] != dress_answer_index[i])
 			return false;
+		
 	}
 	return true;
 }

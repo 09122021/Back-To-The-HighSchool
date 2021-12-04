@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GGP_TP.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="milk_num.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -25,9 +22,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="school_to_milk.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="game_init.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game_ending.cpp">
@@ -43,6 +37,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="go_to_school.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="game_beg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="is_wrong.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="milk_to_lunch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
